@@ -17,6 +17,9 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Get API URL from environment variable
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
   useEffect(() => {
     prism.highlightAll()
   }, [])
@@ -25,7 +28,7 @@ function App() {
     try {
       setLoading(true)
       setError(null)
-      const response = await axios.post('http://localhost:3000/ai/get-response', { 
+      const response = await axios.post(`${API_URL}/ai/get-response`, { 
         prompt: code 
       })
       // Extract the result text from response
