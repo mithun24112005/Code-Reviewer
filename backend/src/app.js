@@ -10,16 +10,29 @@ const app = express();
 // JSON body parsing with a reasonable size limit
 app.use(express.json({ limit: "1mb" }));
 
-// CORS setup - Handle both development and production
+// CORS setup - More robust configuration
 const allowedOrigins = [
   'http://localhost:5173',  // Local development
-  process.env.FRONTEND_ORIGIN || 'https://code-reviewer-frontend-43vt.onrender.com'
+  'https://code-reviewer-frontend-fyln.onrender.com',  // Current production frontend
+  process.env.FRONTEND_ORIGIN  // Environment variable fallback
 ].filter(Boolean);
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
@@ -30,6 +43,15 @@ app.get("/", (req, res) => {
 
 // AI routes
 app.use("/ai", aiRoutes);
+
+// Debug CORS route
+app.get("/cors-test", (req, res) => {
+  res.json({
+    origin: req.headers.origin,
+    allowedOrigins: allowedOrigins,
+    headers: req.headers
+  });
+});
 
 // Centralized error handler
 app.use((err, req, res, next) => {
