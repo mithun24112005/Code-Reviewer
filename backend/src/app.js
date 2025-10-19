@@ -10,11 +10,15 @@ const app = express();
 // JSON body parsing with a reasonable size limit
 app.use(express.json({ limit: "1mb" }));
 
-// CORS setup
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "*";
+// CORS setup - Handle both development and production
+const allowedOrigins = [
+  'http://localhost:5173',  // Local development
+  process.env.FRONTEND_ORIGIN || 'https://code-reviewer-frontend-43vt.onrender.com'
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: FRONTEND_ORIGIN,
+    origin: allowedOrigins,
     methods: ["GET", "POST", "OPTIONS"],
   })
 );
