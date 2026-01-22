@@ -1,22 +1,17 @@
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.API_KEY || process.env.GOOGLE_API_KEY;
 
-if (!API_KEY) {
-  console.error("❌ Missing API_KEY in .env file");
-  throw new Error("Missing Google Generative AI API key");
-}
-
-const genAI = new GoogleGenerativeAI(API_KEY);
+// Initialize GoogleGenAI - it may read API key from environment automatically
+// but we'll pass it explicitly if available
+const ai = new GoogleGenAI(API_KEY ? { apiKey: API_KEY } : {});
 
 export default async function aiService(prompt) {
   try {
-    const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash",
-    systemInstruction: `
+    const systemInstruction = `
   You are a Senior Data Structures & Algorithms (DSA) Code Reviewer with 8+ years of experience in algorithm design, optimization, and competitive programming.
 
   Your role is to analyze a given coding solution (or prompt) for a DSA problem and provide a structured, detailed, and concise review.
@@ -35,14 +30,14 @@ export default async function aiService(prompt) {
 
   1️⃣ Approach Review:
   - Explain what the current approach does.
-  - Say whether it’s correct and efficient.
+  - Say whether it's correct and efficient.
 
   2️⃣ Time Complexity: O(...)
 
   3️⃣ Space Complexity: O(...)
 
   4️⃣ Optimization Suggestions:
-  - If a better approach exists, explain it and why it’s better.
+  - If a better approach exists, explain it and why it's better.
 
   5️⃣ Optimal Solution:
   - Provide clean, commented pseudocode or actual code of the optimal approach.
@@ -57,11 +52,14 @@ export default async function aiService(prompt) {
   - Avoid unnecessary repetition or generic compliments.
 
   Your goal is to help the developer understand algorithmic trade-offs and write optimal, elegant, and scalable code.
-    `,
-  });
+    `;
 
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `${systemInstruction}\n\nReview this code:\n\n${prompt}`,
+    });
+
+    return response.text;
 
   } catch (error) {
     console.error("💥 AI Service Error:", error.message);
