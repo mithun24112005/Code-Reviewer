@@ -1,135 +1,298 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --bg-dark: #0c0c0c;
+    --bg-panel: #161616;
+    --bg-glass: rgba(255, 255, 255, 0.03);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --primary-color: #3b82f6;
+    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --text-main: #e5e5e5;
+    --text-muted: #a3a3a3;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+    --radius-xl: 12px;
 }
 
-html,
-body,
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    height: 100vh;
+    overflow: hidden;
+}
+
 #root {
-  height: 100%;
-  width: 100%;
+    height: 100%;
 }
 
 .app-container {
-  min-height: 100%;
-  width: 100%;
-}
-
-main {
-  min-height: 100vh;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  gap: 1rem;
-}
-
-main .left,
-main .right {
-  min-height: 500px;
-  flex: 1;
-  border-radius: 0.7rem;
-  overflow: hidden;
-}
-
-main .left {
-  background-color: #000000;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
-}
-
-.left .code {
-  flex: 1;
-  overflow: auto;
-}
-
-.code pre,
-.code pre code {
-  height: 100%;
-  margin: 0;
-  border-radius: 0.7rem;
-  background-color: #0c0c0c;
-}
-
-main .left .review {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  background-color: rgb(219, 219, 255);
-  color: #000000;
-  padding: 0.5rem 2rem;
-  font-weight: 500;
-  cursor: pointer;
-  user-select: none;
-  border-radius: 0.7rem;
-  border: none;
-  transition: opacity 0.2s;
-}
-
-main .left .review:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-main .right {
-  background-color: #343434;
-  padding: 1rem;
-  overflow: auto;
-}
-
-.markdown-content {
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.markdown-content pre {
-  margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-}
-
-.markdown-content code {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.9em;
-}
-
-.error {
-  color: #ff6b6b;
-  padding: 1rem;
-  border: 1px solid #ff6b6b;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  main {
+    display: flex;
     flex-direction: column;
-    padding: 0.5rem;
-  }
-
-  main .left,
-  main .right {
-    width: 100%;
-    min-height: 300px;
-  }
-
-  .markdown-content {
-    font-size: 0.9rem;
-  }
+    height: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
-/* Dark/Light Theme Support */
-@media (prefers-color-scheme: light) {
-  main .right {
-    background-color: #f5f5f5;
-    color: #333;
-  }
+/* Header */
+.header {
+    height: 60px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-subtle);
+}
 
-  .markdown-content pre {
-    background-color: #f0f0f0;
-  }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.logo-icon {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.brand h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+}
+
+/* Main Split Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    overflow: hidden;
+}
+
+.pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+    /* Prevent flex overflow */
+}
+
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+}
+
+.pane-header h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Glass Panels */
+.glass-panel {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Editor Specifics */
+.editor-container {
+    display: flex;
+    font-family: var(--font-mono);
+}
+
+/* Line Numbers Fix */
+.line-numbers {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #444;
+    text-align: right;
+    font-size: 14px;
+    line-height: 1.5;
+    /* Match prism standard */
+    user-select: none;
+    min-width: 40px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Ensure code wrapper matches height */
+.code-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+}
+
+/* Standardize Editor styles */
+.code-wrapper textarea,
+.code-wrapper pre {
+    min-height: 100% !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    font-family: var(--font-mono) !important;
+}
+
+/* Action Bar */
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 2rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    font-size: 1rem;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
+/* Review Pane */
+.review-container {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.loader-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Markdown Styling */
+.markdown-content {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #d4d4d4;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    color: #fff;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Prism Overrides for dark theme match */
+code[class*="language-"],
+pre[class*="language-"] {
+    text-shadow: none !important;
+    font-family: var(--font-mono) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        overflow-y: auto;
+        /* Allow body scroll on mobile */
+        height: auto;
+    }
+
+    .main-content {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 2rem;
+        height: auto;
+        overflow: visible;
+    }
+
+    .pane {
+        min-height: 500px;
+        /* Give editor enough space */
+    }
+
+    .header {
+        padding: 0 1rem;
+    }
 }
